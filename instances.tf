@@ -41,16 +41,14 @@ data "aws_ami" "linuxAmiWorker" {
 resource "aws_key_pair" "master_key" {
   provider   = aws.region-master
   key_name   = "master_key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5IkRNJQtrROT8pjKJeoA8lF7wQ6wfIcj4xxE/nRc19xTebwOMlYfpfTRfSk65FjFkf0xLuDTpa8r/dA+tmkMkj3oCFR+UKCyTFyhxWbRvVzaRckk+ph8BcENNMHd8uAAukBnHlJiPwI1+BCaSNR1LhUGTRBiiTJMK8dxfBHnfGfSm3s7j8yVQbYcGk8GC8cYk5m6ZfF3UBeD0/P6mdx0eIKCGkfk2yWFHOK+BAJgwC0GNPChxHY07ywBk7X7fIj3+ldyXIH+vtBkx6nWXJ1nw9zz1mFCa9QziybsglcS//zKxmQ4lAVOcul4xpY6fODHtXKS2RB1dm0ADKuDUb Fake key"
-
+  public_key = file("./key/key1.pem")
 }
 
 #Create key-pair for logging into EC2 in us-west-2
 resource "aws_key_pair" "worker_key" {
   provider   = aws.region-worker
   key_name   = "worker_key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5IkRNJQtrROT8pjKJeoA8lF7wQ6wfIcj4xxE/nRc19xTebwOMlYfpfTRfSk65FjFkf0xLuDTpa8r/dA+tmkMkj3oCFR+UKCyTFyhxWbRvVzaRckk+ph8BcENNMHd8uAAukBnHlJiPwI1+BCaSNR1LhUGTRBiiTJMK8dxfBHnfGfSm3s7j8yVQbYcGk8GC8cYk5m6ZfF3UBeD0/P6mdx0eIKCGkfk2yWFHOK+BAJgwC0GNPChxHY07ywBk7X7fIj3+ldyXIH+vtBkx6nWXJ1nw9zz1mFCa9QziybsglcS//zKxmQ4lAVOcul4xpY6fODHtXKS2RB1dm0ADKuDUb Fake key"
-
+  public_key = file("./key/key1.pem")
 }
 
 #Create and bootstrap EC2 in us-east-1
@@ -73,7 +71,7 @@ resource "aws_instance" "jenkins_master" {
       type        = "ssh"
       user        = "ec2-user"
       host        = self.public_ip
-      private_key = file("./key/carnegie1.pem")
+      private_key = file("./key/key1.pem")
     }
   }
   provisioner "local-exec" {
@@ -105,11 +103,11 @@ resource "aws_instance" "jenkins_worker" {
       type        = "ssh"
       user        = "ec2-user"
       host        = self.public_ip
-      private_key = file("./key/carnegie1.pem")
+      private_key = file("./key/key1.pem")
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook --ssh-common-args='-o StrictHostKeyChecking=no' -u ec2-user -i '${self.public_ip}', --private-key ./key/worker_key.pem ./ansible_templates/jenkins_worker.yml"
+    command = "ansible-playbook --ssh-common-args='-o StrictHostKeyChecking=no' -u ec2-user -i '${self.public_ip}', --private-key ./key/worker_key.pem --extra-vars 'master_ip=${aws_instance.jenkins_master.private_ip}' ./ansible_templates/jenkins_worker.yml"
     #command = <<EOF
     #  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region-worker} --instance-ids ${self.id}
     #  ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/jenkins_worker.yml
