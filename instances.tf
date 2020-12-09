@@ -75,10 +75,10 @@ resource "aws_instance" "jenkins_master" {
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook --ssh-common-args='-o StrictHostKeyChecking=no' -u ec2-user -i '${self.public_ip}', --private-key ./key/master_key.pem ./ansible_templates/jenkins_master.yml"
+    command = "ansible-playbook --ssh-common-args='-o StrictHostKeyChecking=no' -u ec2-user -i '${self.public_ip}', --private-key ./key/master_key.pem ./ansible/jenkins_master.yml"
     #  command = <<EOF
     #    aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region-master} --instance-ids ${self.id}
-    #    ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/jenkins_master.yml
+    #    ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible/jenkins_master.yml
     #    EOF
   }
 }
@@ -107,10 +107,10 @@ resource "aws_instance" "jenkins_worker" {
     }
   }
   provisioner "local-exec" {
-    command = "ansible-playbook --ssh-common-args='-o StrictHostKeyChecking=no' -u ec2-user -i '${self.public_ip}', --private-key ./key/worker_key.pem --extra-vars 'master_ip=${aws_instance.jenkins_master.private_ip}' ./ansible_templates/jenkins_worker.yml"
+    command = "ansible-playbook --ssh-common-args='-o StrictHostKeyChecking=no' -u ec2-user -i '${self.public_ip}', --private-key ./key/worker_key.pem --extra-vars 'master_ip=${aws_instance.jenkins_master.private_ip}' ./ansible/jenkins_worker.yml"
     #command = <<EOF
     #  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region-worker} --instance-ids ${self.id}
-    #  ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_templates/jenkins_worker.yml
+    #  ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible/jenkins_worker.yml
     #  EOF
   }
 }
