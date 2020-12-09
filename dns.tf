@@ -1,4 +1,7 @@
-#DNS Configuration
+###################
+#DNS Configuration#
+###################
+
 #Get already , publicly configured Hosted Zone on Route53 
 data "aws_route53_zone" "dns" {
   provider = aws.region-master

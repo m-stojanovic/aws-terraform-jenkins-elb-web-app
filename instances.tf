@@ -10,12 +10,6 @@
 #  name     = "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 #}
 
-#resource "aws_iam_service_linked_role" "elasticloadbalancing" {
-#  provider         = aws.region-master
-#  aws_service_name = "elasticloadbalancing.amazonaws.com"
-#
-#}
-
 data "aws_ami" "linuxAmiMaster" {
   provider    = aws.region-master
   most_recent = true
@@ -47,7 +41,7 @@ data "aws_ami" "linuxAmiWorker" {
 resource "aws_key_pair" "master_key" {
   provider   = aws.region-master
   key_name   = "master_key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5IkRNJQtrROT8pjKJeoA8lF7wQ6wfIcj4xxE/nRc19xTebwOMlYfpfTRfSk65FjFkf0xLuDTpa8r/dA+tmkMkj3oCFR+UKCyTFyhxWbRvVzaRckk+ph8BcENNMHd8uAAukBnHlJiPwI1+BCaSNR1LhUGTRBiiTJMK8dxfBHnfGfSm3s7j8yVQbYcGk8GC8cYk5m6ZfF3UBeD0/P6mdx0eIKCGkfk2yWFHOK+BAJgwC0GNPChxHY07ywBk7+X7fIj3+ldyXIH+vtBkx6nWXJ1nw9zz1mFCa9QziybsglcOS//zKxmQ4lAVOcul4xpiY6fODHtXKS2RB1dm0ADKuDUb Octopus key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5IkRNJQtrROT8pjKJeoA8lF7wQ6wfIcj4xxE/nRc19xTebwOMlYfpfTRfSk65FjFkf0xLuDTpa8r/dA+tmkMkj3oCFR+UKCyTFyhxWbRvVzaRckk+ph8BcENNMHd8uAAukBnHlJiPwI1+BCaSNR1LhUGTRBiiTJMK8dxfBHnfGfSm3s7j8yVQbYcGk8GC8cYk5m6ZfF3UBeD0/P6mdx0eIKCGkfk2yWFHOK+BAJgwC0GNPChxHY07ywBk7X7fIj3+ldyXIH+vtBkx6nWXJ1nw9zz1mFCa9QziybsglcS//zKxmQ4lAVOcul4xpY6fODHtXKS2RB1dm0ADKuDUb Fake key"
 
 }
 
@@ -55,7 +49,7 @@ resource "aws_key_pair" "master_key" {
 resource "aws_key_pair" "worker_key" {
   provider   = aws.region-worker
   key_name   = "worker_key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5IkRNJQtrROT8pjKJeoA8lF7wQ6wfIcj4xxE/nRc19xTebwOMlYfpfTRfSk65FjFkf0xLuDTpa8r/dA+tmkMkj3oCFR+UKCyTFyhxWbRvVzaRckk+ph8BcENNMHd8uAAukBnHlJiPwI1+BCaSNR1LhUGTRBiiTJMK8dxfBHnfGfSm3s7j8yVQbYcGk8GC8cYk5m6ZfF3UBeD0/P6mdx0eIKCGkfk2yWFHOK+BAJgwC0GNPChxHY07ywBk7+X7fIj3+ldyXIH+vtBkx6nWXJ1nw9zz1mFCa9QziybsglcOS//zKxmQ4lAVOcul4xpiY6fODHtXKS2RB1dm0ADKuDUb Octopus key"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5IkRNJQtrROT8pjKJeoA8lF7wQ6wfIcj4xxE/nRc19xTebwOMlYfpfTRfSk65FjFkf0xLuDTpa8r/dA+tmkMkj3oCFR+UKCyTFyhxWbRvVzaRckk+ph8BcENNMHd8uAAukBnHlJiPwI1+BCaSNR1LhUGTRBiiTJMK8dxfBHnfGfSm3s7j8yVQbYcGk8GC8cYk5m6ZfF3UBeD0/P6mdx0eIKCGkfk2yWFHOK+BAJgwC0GNPChxHY07ywBk7X7fIj3+ldyXIH+vtBkx6nWXJ1nw9zz1mFCa9QziybsglcS//zKxmQ4lAVOcul4xpY6fODHtXKS2RB1dm0ADKuDUb Fake key"
 
 }
 

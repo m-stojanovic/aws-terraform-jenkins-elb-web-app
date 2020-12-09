@@ -30,14 +30,33 @@ resource "aws_lb_target_group" "app_lb_tg" {
   }
 }
 
+#Create listener on tcp/80 HTTP
 resource "aws_lb_listener" "jenkins_listener_http" {
   provider          = aws.region-master
   load_balancer_arn = aws_lb.application_lb.arn
   port              = var.webserver_port
   protocol          = "HTTP"
   default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+#Create new listener on tcp/443 HTTPS
+resource "aws_lb_listener" "jenkins-listener" {
+  provider          = aws.region-master
+  load_balancer_arn = aws_lb.application_lb.arn
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  port              = "443"
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate.jenkins-lb-https.arn
+  default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.app_lb_tg.id
+    target_group_arn = aws_lb_target_group.app_lb_tg.arn
   }
 }
 

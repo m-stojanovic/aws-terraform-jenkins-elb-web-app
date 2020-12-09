@@ -10,6 +10,6 @@ output "jenkins_worker_public_ip" {
 output "jenkins_alb_dns" {
   value = aws_lb.application_lb.dns_name
 }
-#output "url" {
-#  value = aws_route53_record.jenkins.fqdn
-#}
+output "url" {
+  value = aws_route53_record.jenkins.fqdn
+}

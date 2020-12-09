@@ -29,6 +29,7 @@ resource "aws_internet_gateway" "igw_master" {
     Name = "igw_master_jenkins"
   }
 }
+
 # Create IGW in us-west-2
 resource "aws_internet_gateway" "igw_worker" {
   provider = aws.region-worker
@@ -39,22 +40,22 @@ resource "aws_internet_gateway" "igw_worker" {
   }
 }
 
-# Az
-data "aws_availability_zones" "azs" {
+# Check Available AZ in us-east-1 region
+data "aws_availability_zones" "azs_master" {
   provider = aws.region-master
   state    = "available"
 }
 
-# Az
+# Check Available AZ in us-west-2 region
 data "aws_availability_zones" "azs_worker" {
   provider = aws.region-worker
   state    = "available"
 }
 
-# subnet1
+# Subnet_1 in us-east-1
 resource "aws_subnet" "subnet_1" {
   provider          = aws.region-master
-  availability_zone = element(data.aws_availability_zones.azs.names, 0)
+  availability_zone = element(data.aws_availability_zones.azs_master.names, 0)
   vpc_id            = aws_vpc.vpc_master.id
   cidr_block        = "10.0.1.0/24"
 
@@ -62,10 +63,11 @@ resource "aws_subnet" "subnet_1" {
     Name = "subnet_1_master_jenkins"
   }
 }
-# subnet2
+
+# Subnet_2 in us-east-1
 resource "aws_subnet" "subnet_2" {
   provider          = aws.region-master
-  availability_zone = element(data.aws_availability_zones.azs.names, 1)
+  availability_zone = element(data.aws_availability_zones.azs_master.names, 1)
   vpc_id            = aws_vpc.vpc_master.id
   cidr_block        = "10.0.2.0/24"
 
@@ -73,7 +75,8 @@ resource "aws_subnet" "subnet_2" {
     Name = "subnet_2_master_jenkins"
   }
 }
-# subnet us-west-2
+
+# Subnet_1 in us-west-2
 resource "aws_subnet" "subnet_1_worker" {
   provider          = aws.region-worker
   availability_zone = element(data.aws_availability_zones.azs_worker.names, 0)
